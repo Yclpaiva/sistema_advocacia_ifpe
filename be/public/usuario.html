@@ -23,9 +23,6 @@ body {
 }
 
 .logout-btn {
-    position: absolute;
-    top: -50px;
-    right: 0;
     background-color: #e74c3c;
     padding: 0.8rem 1.5rem;
     border-radius: 8px;
@@ -181,8 +178,8 @@ input:focus, textarea:focus {
     <div id="message" class="hidden">
       <p>Você não está cadastrado. Por favor, faça login para acessar esta página.</p>
     </div>
-    <button class="logout-btn" onclick="logout()">Sair</button>
     <div id="petition-section" class="hidden">
+      <button class="logout-btn" onclick="logout()">Sair</button>
       <h2>Cadastrar Petição</h2>
       <form id="petition-form">
         <div class="form-group">
