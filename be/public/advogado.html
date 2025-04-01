@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Advogado</title>
+    <style>
+      body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .demand-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #e0e0e0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px;
+            font-size: 0.8em;
+        }
+
+        button:not(.logout-btn) {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        select {
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .auth-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="authSection" style="display: none;">
+      <button class="logout-btn" onclick="logout()">Sair</button>
+      <h1>Painel do Advogado</h1>
+      <div class="filter-section">
+        <h3>Filtrar Demandas:</h3>
+        <select id="filterTag">
+          <option value="">Todas as Tags</option>
+        </select>
+        <button onclick="loadDemands()">Filtrar</button>
+      </div>
+      <div id="demandsList"></div>
+    </div>
+    <div id="loginMessage" class="auth-message">
+      <p>Por favor, faça login como advogado para acessar esta página</p>
+      <button onclick="window.location.href='/login.html'">Ir para Login</button>
+    </div>
+    <script>
+      // Verificação inicial de autenticação
+        document.addEventListener('DOMContentLoaded', () => {
+            const userType = localStorage.getItem('tipo_usuario');
+            const userId = localStorage.getItem('usuario_id');
+
+            if (userId && userType === 'lawyer') {
+                document.getElementById('authSection').style.display = 'block';
+                document.getElementById('loginMessage').style.display = 'none';
+                loadTags();
+                loadDemands();
+            } else {
+                document.getElementById('authSection').style.display = 'none';
+                document.getElementById('loginMessage').style.display = 'block';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('usuario_id');
+            localStorage.removeItem('tipo_usuario');
+            window.location.reload();
+        }
+
+        // ========== Lógica das Demandas ==========
+        async function loadTags() {
+            try {
+                const response = await fetch('/api/demand');
+                const demands = await response.json();
+                
+                const tags = [...new Set(demands.flatMap(d => d.tags))];
+                const filterSelect = document.getElementById('filterTag');
+                
+                filterSelect.innerHTML = '<option value="">Todas as Tags</option>';
+                tags.forEach(tag => {
+                    const option = document.createElement('option');
+                    option.value = tag;
+                    option.textContent = tag;
+                    filterSelect.appendChild(option);
+                });
+            } catch (error) {
+                alert('Erro ao carregar tags');
+            }
+        }
+
+        async function loadDemands() {
+            try {
+                const response = await fetch('/api/demand');
+                const allDemands = await response.json();
+                
+                const filterTag = document.getElementById('filterTag').value;
+                const filteredDemands = allDemands.filter(demand => 
+                    !demand.lawyerId && 
+                    (!filterTag || demand.tags.includes(filterTag))
+                );
+
+                displayDemands(filteredDemands);
+            } catch (error) {
+                alert('Erro ao carregar demandas');
+            }
+        }
+
+        function displayDemands(demands) {
+            const container = document.getElementById('demandsList');
+            container.innerHTML = demands.length > 0 ? '' : '<p>Nenhuma demanda disponível</p>';
+
+            demands.forEach(demand => {
+                const card = document.createElement('div');
+                card.className = 'demand-card';
+                card.innerHTML = `
+                    <h3>${demand.title}</h3>
+                    <p>${demand.description}</p>
+                    <div>${demand.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+                    <button onclick="assignDemand(${demand.id})">Assumir Demanda</button>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        async function assignDemand(demandId) {
+            const lawyerId = localStorage.getItem('usuario_id');
+            if (!lawyerId) return logout();
+
+            try {
+                // Busca a demanda atual
+                const response = await fetch(`/api/demand/${demandId}`);
+                const demand = await response.json();
+
+                // Atualiza com o ID do advogado
+                const updatedDemand = {
+                    ...demand,
+                    lawyerId: lawyerId
+                };
+
+                // Envia a atualização
+                await fetch(`/api/demand/${demandId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedDemand)
+                });
+
+                alert('Demanda atribuída com sucesso!');
+                loadDemands();
+            } catch (error) {
+                alert('Erro ao atribuir demanda');
+            }
+        }
+    </script>
+  </body>
+</html>

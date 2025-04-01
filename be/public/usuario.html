@@ -1,0 +1,189 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro e Consulta de Petições</title>
+    <style>
+      body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .petition-list {
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="message" class="hidden">
+      <p>Você não está cadastrado. Por favor, faça login para acessar esta página.</p>
+    </div>
+    <div id="petition-section" class="hidden">
+      <h2>Cadastrar Petição</h2>
+      <form id="petition-form">
+        <div class="form-group">
+          <label for="title">Título da Petição</label>
+          <input type="text" id="title" placeholder="Título da Petição" required>
+        </div>
+        <div class="form-group">
+          <label for="description">Descrição</label>
+          <textarea id="description" rows="4" placeholder="Descrição detalhada da petição" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="especialidade">Especialidade</label><br>
+          <input type="radio" id="civil" name="especialidade" value="civil">
+          <label for="civil">Direito Civil</label><br>
+          <input type="radio" id="penal" name="especialidade" value="penal">
+          <label for="penal">Direito Penal</label><br>
+          <input type="radio" id="trabalho" name="especialidade" value="trabalho">
+          <label for="trabalho">Direito do Trabalho</label><br>
+          <input type="radio" id="tributario" name="especialidade" value="tributario">
+          <label for="tributario">Direito Tributário</label><br>
+          <input type="radio" id="empresarial" name="especialidade" value="empresarial">
+          <label for="empresarial">Direito Empresarial</label><br>
+          <input type="radio" id="familia" name="especialidade" value="familia">
+          <label for="familia">Direito de Família</label><br>
+          <input type="radio" id="consumidor" name="especialidade" value="consumidor">
+          <label for="consumidor">Direito do Consumidor</label><br>
+          <input type="radio" id="ambiental" name="especialidade" value="ambiental">
+          <label for="ambiental">Direito Ambiental</label><br>
+        </div>
+        <button type="submit">Cadastrar Petição</button>
+      </form>
+      <h3>Consultas de Petições Criadas</h3>
+      <div class="petition-list" id="petition-list">
+        <p>Carregando suas petições...</p>
+      </div>
+    </div>
+    <script>
+      // Lê o 'usuario_id' do localStorage
+        const usuarioId = localStorage.getItem('usuario_id');
+        
+        if (!usuarioId) {
+            // Se o usuário não estiver cadastrado, exibe a mensagem
+            document.getElementById('message').classList.remove('hidden');
+            document.getElementById('petition-section').classList.add('hidden');
+        } else {
+            // Se o usuário estiver cadastrado, exibe a seção de petições
+            document.getElementById('petition-section').classList.remove('hidden');
+            document.getElementById('message').classList.add('hidden');
+            
+            // Carregar petições do usuário
+            loadPetitions(usuarioId);
+        }
+
+          function getEspecialidade() {
+        const especialidade = document.querySelector('input[name="especialidade"]:checked');
+        if (especialidade) {
+            return especialidade.value;  // Retorna o valor da especialidade selecionada
+        } else {
+            alert('Por favor, selecione uma especialidade.');
+            return null;
+        }
+    }
+
+
+        // Função para carregar as petições do usuário
+        function loadPetitions(clientId) {
+            fetch('/api/demand')  // Rota sem filtro no backend
+                .then(response => response.json())
+                .then(petitions => {
+                    // Filtra as petições pelo clientId no frontend
+
+                    console.log(petitions);
+
+                    // Aqui garantimos que o clientId do localStorage seja número
+                    const filteredPetitions = petitions.filter(petition => parseInt(petition.clientId) === parseInt(clientId));
+
+                    console.log(filteredPetitions);
+                    const petitionList = document.getElementById('petition-list');
+                    petitionList.innerHTML = ''; // Limpa o conteúdo anterior
+
+                    // Verifica se existem petições para o cliente
+                    if (filteredPetitions.length > 0) {
+                        filteredPetitions.forEach(petition => {
+                            const petitionElement = document.createElement('div');
+                            petitionElement.innerHTML = `
+                                <h4>${petition.title}</h4>
+                                <p>${petition.description}</p>
+                                <p><strong>Tags:</strong> ${petition.tags.join(', ')}</p>
+                                <p><strong>Estado:</strong> ${petition.status || 'Em andamento'}</p>
+                                <hr>
+                            `;
+                            petitionList.appendChild(petitionElement);
+                        });
+                    } else {
+                        petitionList.innerHTML = '<p>Você não tem petições cadastradas.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao carregar as petições:', error);
+                    alert('Erro ao carregar petições');
+                });
+        }
+
+        // Evento de envio do formulário para criar uma nova petição
+        document.getElementById('petition-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Obtendo os valores do formulário
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+
+            // Criando o objeto de dados para a nova petição
+            const petitionData = {
+                title,
+                description,
+                clientId: usuarioId,
+                tags: [getEspecialidade()]
+            };
+
+            // Enviando os dados para a API para criar uma nova petição
+            fetch('/api/demand', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(petitionData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Petição cadastrada com sucesso!');
+                // Carregar as petições novamente
+                loadPetitions(usuarioId);
+                // Limpar o formulário
+                document.getElementById('petition-form').reset();
+            })
+            .catch(error => {
+                console.error('Erro ao cadastrar petição:', error);
+                alert('Erro ao cadastrar petição');
+            });
+        });
+    </script>
+  </body>
+</html>

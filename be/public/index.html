@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plataforma Jurídica</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .hidden { display: none; }
+        .tag { background-color: #e0e0e0; padding: 4px 8px; border-radius: 4px; margin: 2px; }
+        .demand-card { margin: 10px 0; padding: 15px; border: 1px solid #eee; }
+    </style>
+  </head>
+  <body>
+    <div id="selecao_sign_or_signup">
+      <button onclick="login()">Entrar</button>
+      <button onclick="cadastrarCliente()">Cadastrar Cliente</button>
+      <button onclick="cadastrarAdvogado()">Cadastrar Advogado</button>
+    </div>
+    <!-- Tela de Login/Cadastro -->
+    <div id="auth-section" class="section">
+      <!-- Seleção de tipo de login (client ou lawyer) -->
+      <div class="form-group">
+        <label for="userType">Tipo de usuário:</label><br>
+        <input type="radio" id="client" name="userType" value="client" checked>
+        <label for="client">Cliente</label>
+        <input type="radio" id="lawyer" name="userType" value="lawyer">
+        <label for="lawyer">Advogado</label>
+      </div>
+      <!-- Campos de login -->
+      <div class="form-group">
+        <input type="email" id="email" placeholder="E-mail">
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" placeholder="Senha">
+      </div>
+      <button onclick="handleAuth()">Continuar</button>
+    </div>
+    <!-- Tela de Cadastro de Cliente -->
+    <div id="client-register-section" class="section hidden">
+      <div class="form-group">
+        <input type="email" id="email_client_register" placeholder="E-mail">
+      </div>
+      <div class="form-group">
+        <input type="password" id="password_client_register" placeholder="Senha">
+      </div>
+      <div class="form-group">
+        <input type="password" id="password2_client_register" placeholder="Repetir Senha">
+      </div>
+      <button onclick="handleAuth()">Cadastrar</button>
+    </div>
+    <!-- Tela de Cadastro de Advogado -->
+    <div id="lawyer-register-section" class="section hidden">
+      <div class="form-group">
+        <input type="text" id="name" placeholder="Nome">
+      </div>
+      <div class="form-group">
+        <input type="email" id="email_lawyer_register" placeholder="E-mail">
+      </div>
+      <div class="form-group">
+        <input type="password" id="password_lawyer_register" placeholder="Senha">
+      </div>
+      <div class="form-group">
+        <input type="password" id="password2_lawyer_register" placeholder="Repetir Senha">
+      </div>
+      <div class="form-group">
+        <input type="text" id="oab_lawyer_register" placeholder="OAB">
+      </div>
+      <div class="form-group">
+        <input type="radio" id="civil" name="especialidade" value="civil">
+        <label for="civil">Direito Civil</label>
+        <input type="radio" id="penal" name="especialidade" value="penal">
+        <label for="penal">Direito Penal</label>
+        <input type="radio" id="trabalho" name="especialidade" value="trabalho">
+        <label for="trabalho">Direito do Trabalho</label>
+        <input type="radio" id="tributario" name="especialidade" value="tributario">
+        <label for="tributario">Direito Tributário</label>
+        <input type="radio" id="empresarial" name="especialidade" value="empresarial">
+        <label for="empresarial">Direito Empresarial</label>
+        <input type="radio" id="familia" name="especialidade" value="familia">
+        <label for="familia">Direito de Família</label>
+        <input type="radio" id="consumidor" name="especialidade" value="consumidor">
+        <label for="consumidor">Direito do Consumidor</label>
+        <input type="radio" id="ambiental" name="especialidade" value="ambiental">
+        <label for="ambiental">Direito Ambiental</label>
+      </div>
+      <button onclick="handleAuth()">Cadastrar</button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
