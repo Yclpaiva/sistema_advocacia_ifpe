@@ -37,12 +37,27 @@
         .hidden {
             display: none;
         }
+
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
   </head>
   <body>
     <div id="message" class="hidden">
       <p>Você não está cadastrado. Por favor, faça login para acessar esta página.</p>
     </div>
+
+      <button class="logout-btn" onclick="logout()">Sair</button>
     <div id="petition-section" class="hidden">
       <h2>Cadastrar Petição</h2>
       <form id="petition-form">
@@ -107,19 +122,20 @@
         }
     }
 
+        function logout() {
+            localStorage.removeItem('usuario_id');
+            localStorage.removeItem('tipo_usuario');
+            window.location.reload();
+        }
+
 
         // Função para carregar as petições do usuário
         function loadPetitions(clientId) {
             fetch('/api/demand')  // Rota sem filtro no backend
                 .then(response => response.json())
                 .then(petitions => {
-                    // Filtra as petições pelo clientId no frontend
-
                     console.log(petitions);
-
-                    // Aqui garantimos que o clientId do localStorage seja número
                     const filteredPetitions = petitions.filter(petition => parseInt(petition.clientId) === parseInt(clientId));
-
                     console.log(filteredPetitions);
                     const petitionList = document.getElementById('petition-list');
                     petitionList.innerHTML = ''; // Limpa o conteúdo anterior

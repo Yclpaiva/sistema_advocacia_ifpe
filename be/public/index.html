@@ -5,12 +5,168 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plataforma Jurídica</title>
     <style>
-      body { font-family: Arial, sans-serif; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .section { margin: 30px 0; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
-        .form-group { margin-bottom: 15px; }
-        .hidden { display: none; }
-        .tag { background-color: #e0e0e0; padding: 4px 8px; border-radius: 4px; margin: 2px; }
-        .demand-card { margin: 10px 0; padding: 15px; border: 1px solid #eee; }
+      body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    line-height: 1.6;
+}
+
+.section {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid #e9ecef;
+}
+
+.section:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+input, button {
+    width: 100%;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 0rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border: none;
+}
+
+button:hover {
+    background-color: #2980b9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.hidden {
+    display: none;
+}
+
+.tag {
+    display: inline-block;
+    background-color: #e9ecef;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    margin: 0.25rem;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.tag:hover {
+    background-color: #3498db;
+    color: white;
+    transform: scale(1.05);
+}
+
+.demand-card {
+    padding: 1.5rem;
+    margin: 1rem 0;
+    background: white;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.demand-card:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+#selecao_sign_or_signup {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+}
+
+#selecao_sign_or_signup button {
+    flex: 1;
+    max-width: 200px;
+    padding: 1rem;
+    background-color: #2ecc71;
+}
+
+#selecao_sign_or_signup button:nth-child(2) {
+    background-color: #3498db;
+}
+
+#selecao_sign_or_signup button:nth-child(3) {
+    background-color: #9b59b6;
+}
+
+input[type="radio"] {
+    width: auto;
+    margin-right: 0.5rem;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #34495e;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    .section {
+        padding: 1.5rem;
+    }
+    
+    #selecao_sign_or_signup {
+        flex-direction: column;
+    }
+    
+    #selecao_sign_or_signup button {
+        max-width: 100%;
+    }
+}
+
+.error-message {
+    color: #e74c3c;
+    background-color: #fdeded;
+    padding: 0.8rem;
+    border-radius: 8px;
+    margin: 1rem 0;
+    display: none;
+}
+
+#selecao_sign_or_signup {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 3rem;
+        justify-content: center;
+}
     </style>
   </head>
   <body>
