@@ -6,58 +6,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro e Consulta de Petições</title>
     <style>
-      body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .petition-list {
-            margin-top: 20px;
-        }
-        .hidden {
-            display: none;
-        }
+      /* Estilos gerais alinhados com a paleta existente */
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    line-height: 1.6;
+}
 
+#petition-section {
+    margin-top: 3rem;
+    position: relative;
+}
 
-        .logout-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+.logout-btn {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    background-color: #e74c3c;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Estilização do formulário */
+#petition-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+    color: #34495e;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+input:focus, textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    outline: none;
+}
+
+/* Estilização dos radio buttons */
+#petition-form .form-group[name="especialidade"] {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+#petition-form .form-group[name="especialidade"] > div {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+#petition-form .form-group[name="especialidade"] > div:hover {
+    border-color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+#petition-form input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.75rem;
+    accent-color: #3498db;
+}
+
+/* Estilização da lista de petições */
+.petition-list {
+    margin-top: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.petition-list div {
+    padding: 1.5rem;
+    margin: 1rem 0;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.petition-list div:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.petition-list h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.petition-list p {
+    color: #7f8c8d;
+    margin: 0.5rem 0;
+}
+
+/* Botão de submit */
+#petition-form button[type="submit"] {
+    background-color: #2ecc71;
+    width: auto;
+    padding: 0.8rem 2rem;
+    margin-top: 1rem;
+    transition: all 0.3s ease;
+}
+
+#petition-form button[type="submit"]:hover {
+    background-color: #27ae60;
+    transform: translateY(-1px);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #petition-form .form-group[name="especialidade"] {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    #petition-form .form-group[name="especialidade"] {
+        grid-template-columns: 1fr;
+    }
+    
+    .logout-btn {
+        position: static;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}
+
+.hidden {
+    display: none;
+}
     </style>
   </head>
   <body>
     <div id="message" class="hidden">
       <p>Você não está cadastrado. Por favor, faça login para acessar esta página.</p>
     </div>
-
-      <button class="logout-btn" onclick="logout()">Sair</button>
+    <button class="logout-btn" onclick="logout()">Sair</button>
     <div id="petition-section" class="hidden">
       <h2>Cadastrar Petição</h2>
       <form id="petition-form">

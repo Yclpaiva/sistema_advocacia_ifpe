@@ -167,6 +167,60 @@ input[type="radio"] {
     margin-bottom: 3rem;
         justify-content: center;
 }
+
+.form-group[name="especialidade"] {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.form-group[name="especialidade"] .radio-item {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.form-group[name="especialidade"] .radio-item:hover {
+    border-color: #3498db;
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+    transform: translateY(-2px);
+}
+
+.form-group[name="especialidade"] input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.75rem;
+    accent-color: #3498db;
+    cursor: pointer;
+}
+
+.form-group[name="especialidade"] label {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #2c3e50;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .form-group[name="especialidade"] {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .form-group[name="especialidade"] {
+        grid-template-columns: 1fr;
+    }
+}
     </style>
   </head>
   <body>
@@ -225,20 +279,32 @@ input[type="radio"] {
         <input type="text" id="oab_lawyer_register" placeholder="OAB">
       </div>
       <div class="form-group">
+        <div class="radio-item">
         <input type="radio" id="civil" name="especialidade" value="civil">
         <label for="civil">Direito Civil</label>
+        <div class="radio-item">
         <input type="radio" id="penal" name="especialidade" value="penal">
         <label for="penal">Direito Penal</label>
+        <div class="radio-item">
         <input type="radio" id="trabalho" name="especialidade" value="trabalho">
         <label for="trabalho">Direito do Trabalho</label>
+        <div class="radio-item">
         <input type="radio" id="tributario" name="especialidade" value="tributario">
-        <label for="tributario">Direito Tributário</label>
+                <label for="tributario">Direito Tributário</label>
+        </div>
+        <div class="radio-item">
         <input type="radio" id="empresarial" name="especialidade" value="empresarial">
         <label for="empresarial">Direito Empresarial</label>
+        </div>
+        <div class="radio-item">
         <input type="radio" id="familia" name="especialidade" value="familia">
         <label for="familia">Direito de Família</label>
+        </div>
+        <div class="radio-item">
         <input type="radio" id="consumidor" name="especialidade" value="consumidor">
         <label for="consumidor">Direito do Consumidor</label>
+        </div>
+        <div class="radio-item">
         <input type="radio" id="ambiental" name="especialidade" value="ambiental">
         <label for="ambiental">Direito Ambiental</label>
       </div>
