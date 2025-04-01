@@ -172,11 +172,45 @@ input:focus, textarea:focus {
 .hidden {
     display: none;
 }
+
+button:not(.logout-btn) {
+    background-color: #2ecc71;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+        width: 100%;
+}
+
+button:not(.logout-btn):hover {
+    background-color: #27ae60;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+}
+.auth-message {
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin: 2rem 0;
+}
+
+.auth-message button {
+    margin-top: 1rem;
+    background-color: #3498db;
+}
     </style>
   </head>
   <body>
     <div id="message" class="hidden">
-      <p>Você não está cadastrado. Por favor, faça login para acessar esta página.</p>
+      <div id="loginMessage" class="auth-message">
+        <p>Por favor, faça login como advogado para acessar esta página</p>
+        <button onclick="window.location.href='/'">Ir para Login</button>
+      </div>
     </div>
     <div id="petition-section" class="hidden">
       <button class="logout-btn" onclick="logout()">Sair</button>
